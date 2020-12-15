@@ -19,6 +19,7 @@ The following sections will detail the topologies.
    - [BGPPolicies](#bgppolicies)
    - [BGPPoliciesAdjust](#bgppoliciesadjust)
    - [IPTables](#iptables)
+   - [LinkFailure](#linkfailure)
    - [GRETopo](#gretopo)
    - [SSHd](#sshd)
    - [RouterAdvNetwork](#routeradvnetwork)
@@ -210,6 +211,21 @@ You can test this by trying to ping(6) both routers, use nc to (try to)
 exchange data over TCP, or [tracebox](http://www.tracebox.org) to send a crafted TCP
 packet not part of an already established session.
 
+## LinkFailure
+
+_topo name_ : failure
+_args_ : n/a
+
+This network spawns 4 routers: r1, r2 and r3 are in a full mesh and r4 is
+connected to r3. Once the network is ready and launched, the script will:
+
+1. Down links between routers given in the list of the failure plan.
+2. Down two random links of the entire network
+3. Randomly down one link of r1. Either the link r1 - r2 or r1 - r3
+
+For each of these 3 scenario, the network will be rebuilt on its initial
+configuration. At the end of the failure simulation, the network should be
+restored back to its initial configuration.
 
 ## GRETopo
 
@@ -280,9 +296,9 @@ _topo name_ : simple_openr_network
 _args_ : n/a
 
 This network represents a small OpenR network connecting three routers in a Bus
-topology. Each router has hosts attached. The `/tmp` folders are private to
-isolate the unix sockets used by OpenR. The private `/var/log` directories
-isolate logs.
+topology. Each router has hosts attached. OpenR routers use private `/tmp`
+folders to isolate the ZMQ sockets used by the daemon. The OpenR logs are by
+default available in the host machine at `/var/tmp/log/<NODE_NAME>`.
 
 Use
 [breeze](https://github.com/facebook/openr/blob/master/openr/docs/Breeze.md) to
