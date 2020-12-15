@@ -22,6 +22,8 @@ interface ${intf.name}
   ipv6 ospf6 passive
   % endif
   ipv6 ospf6 instance-id ${intf.instance_id}
+  ipv6 ospf6 message-digest-key 1 md5 newpassword
+
   <%block name="interface"/>
 !
 % endfor
@@ -34,6 +36,9 @@ router ospf6
   % for itf in node.ospf6d.interfaces:
   interface ${itf.name} area ${itf.area}
   % endfor
+
+  area 0 authentication message-digest
+
 
   <%block name="router"/>
 !

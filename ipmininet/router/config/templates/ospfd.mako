@@ -19,6 +19,8 @@ interface ${intf.name}
   ip ospf dead-interval ${intf.dead_int}
   ip ospf hello-interval ${intf.hello_int}
   % endif
+  
+  ip ospf message-digest-key 1 md5 newpassword
   <%block name="interface"/>
 !
 % endfor
@@ -29,13 +31,16 @@ router ospf
   redistribute ${r.subtype} metric-type ${r.metric_type} metric ${r.metric}
   % endfor
   % for net in node.ospfd.networks:
-  network ${net.domain.with_prefixlen} area ${net.area}
+    network ${net.domain.with_prefixlen} area ${net.area}
   % endfor
   % for itf in node.ospfd.interfaces:
       % if itf.passive or not itf.active:
   passive-interface ${itf.name}
     % endif
   % endfor
+
+  area 0 authentication message-digest
+
 
   <%block name="router"/>
 !
